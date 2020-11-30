@@ -1,17 +1,30 @@
-import React from 'react'
-import { ColumnContainer, ColumnTitle } from '../styles'
+import React from "react";
+import { useSelector } from "react-redux";
+import { AppState } from "../redux/contracts/state";
+import { ColumnContainer, ColumnTitle } from "../styles";
+import AddNewItem from "./AddNewItem";
+import Card from "./Card";
 
 interface ColumnProps {
-    text: string
+  text: string
+  index: number
 }
+  
 
-const Column:React.FC<ColumnProps> = ({text, children}:React.PropsWithChildren<ColumnProps>) => {
-    return (
-        <ColumnContainer>
-            <ColumnTitle>{text}</ColumnTitle>
-            {children}
-        </ColumnContainer>
-    )
-}
+const Column: React.FC<ColumnProps> = ({text, index}: ColumnProps) => {
+  const lists = useSelector((state: AppState) => state.lists)
 
-export default Column
+  return (
+    <ColumnContainer>
+      <ColumnTitle>{text}</ColumnTitle>
+      {lists[index].tasks.map(task => <Card key={task.id} text={task.text}/>)}
+      <AddNewItem
+        toggleButtonText="+ Add another task"
+        onAdd={console.log}
+        dark
+      />
+    </ColumnContainer>
+  );
+};
+
+export default Column;
